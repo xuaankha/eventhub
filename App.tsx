@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, StatusBar} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {SplashScreen} from './src/screens';
 import AuthNavigator from './src/navigators/AuthNavigator';
@@ -9,15 +9,24 @@ const App = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsShowSplash(false);
-    }, 1500);
+    }, 1200);
     return () => clearTimeout(timeout);
   }, []);
-  return isShowSplash ? (
-    <SplashScreen />
-  ) : (
-    <NavigationContainer>
-      <AuthNavigator />
-    </NavigationContainer>
+  return (
+    <>
+      <StatusBar
+        barStyle="dark-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      {isShowSplash ? (
+        <SplashScreen />
+      ) : (
+        <NavigationContainer>
+          <AuthNavigator />
+        </NavigationContainer>
+      )}
+    </>
   );
 };
 
