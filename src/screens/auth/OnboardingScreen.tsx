@@ -8,7 +8,7 @@ import {globalStyles} from '../../styles/globalStyles';
 import {fontFamilies} from '../../constants/fontFamilies';
 import TextComponent from '../../components/TextComponent';
 
-const OnbroadingScreen = ({navigation}: any) => {
+const OnboardingScreen = ({navigation}: any) => {
   const [index, setIndex] = useState(0);
 
   return (
@@ -83,7 +83,7 @@ const OnbroadingScreen = ({navigation}: any) => {
   );
 };
 
-export default OnbroadingScreen;
+export default OnboardingScreen;
 
 const styles = StyleSheet.create({
   text: {
