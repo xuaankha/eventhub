@@ -6,14 +6,19 @@ import {globalStyles} from '../../styles/globalStyles';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
-  
+
   return (
     <View
       style={[
         globalStyles.container,
         {justifyContent: 'center', alignItems: 'center'},
       ]}>
-      <InputComponent />
+      <InputComponent
+        value={email}
+        onChange={val => setEmail(val)}
+        placeholder="Email"
+        // isPassword
+      />
     </View>
   );
 };
