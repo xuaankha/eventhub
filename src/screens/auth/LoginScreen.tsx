@@ -3,6 +3,8 @@ import React, {useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ButtonComponent, InputComponent} from '../../components';
 import {globalStyles} from '../../styles/globalStyles';
+import {Sms} from 'iconsax-react-native';
+import {appColors} from '../../constants/appColors';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -11,13 +13,15 @@ const LoginScreen = () => {
     <View
       style={[
         globalStyles.container,
-        {justifyContent: 'center', alignItems: 'center'},
+        {justifyContent: 'center', alignItems: 'center', padding: 20},
       ]}>
       <InputComponent
         value={email}
-        onChange={val => setEmail(val)}
         placeholder="Email"
-        // isPassword
+        onChange={val => setEmail(val)}
+        //isPassword
+        allowClear
+        affix={<Sms size={22} color={appColors.gray} />}
       />
     </View>
   );
