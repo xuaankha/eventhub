@@ -10,6 +10,8 @@ import React, {ReactNode, useState} from 'react';
 import {EyeSlash} from 'iconsax-react-native';
 import {appColors} from '../constants/appColors';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {globalStyles} from '../styles/globalStyles';
 interface Props {
   value: string;
   onChange: (val: string) => void;
@@ -38,11 +40,15 @@ const InputComponent = (props: Props) => {
     <View style={[styles.inputContainer]}>
       {affix ?? affix}
       <TextInput
-        style={[styles.input]}
+        style={[styles.input, globalStyles.text]}
         value={value}
         placeholder={placeholder ?? ''}
         onChangeText={val => onChange(val)}
         secureTextEntry={isShowPass}
+        placeholderTextColor={'#747688'}
+        keyboardType={type ?? 'default'}
+        autoCapitalize="none"
+        onEndEditing={onEnd}
       />
       {suffix ?? suffix}
       <TouchableOpacity
@@ -50,9 +56,14 @@ const InputComponent = (props: Props) => {
           isPassword ? () => setIsShowPass(!isShowPass) : () => onChange('')
         }>
         {isPassword ? (
-          <EyeSlash size={22} color={appColors.gray} />
+          <FontAwesome
+            name={isShowPass ? 'eye-slash' : 'eye'}
+            size={22}
+            color={appColors.gray}
+          />
         ) : (
-          value.length > 0 && (
+          value.length > 0 &&
+          allowClear && (
             <AntDesign name="close" size={22} color={appColors.text} />
           )
         )}
