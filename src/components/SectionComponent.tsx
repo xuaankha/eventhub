@@ -1,12 +1,16 @@
-import {View, Text} from 'react-native';
-import React from 'react';
+import {View, Text, StyleProp, ViewStyle} from 'react-native';
+import React, {ReactNode} from 'react';
+import {globalStyles} from '../styles/globalStyles';
 
-const SectionComponent = () => {
-  return (
-    <View>
-      <Text>SectionComponent</Text>
-    </View>
-  );
+interface Props {
+  children: ReactNode;
+  styles?: StyleProp<ViewStyle>;
+}
+
+const SectionComponent = (props: Props) => {
+  const {children, styles} = props;
+
+  return <View style={[globalStyles.section, styles]}>{children}</View>;
 };
 
 export default SectionComponent;
