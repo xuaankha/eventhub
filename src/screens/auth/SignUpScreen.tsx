@@ -13,9 +13,8 @@ import {appColors} from '../../constants/appColors';
 import {Lock, Sms} from 'iconsax-react-native';
 import {fontFamilies} from '../../constants/fontFamilies';
 import SocialLogin from './components/SocialLogin';
-import SignUpScreen from './SignUpScreen';
 
-const LoginScreen = ({navigation}: any) => {
+const SignUpScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRemember, setIsRemember] = useState(true);
@@ -79,15 +78,11 @@ const LoginScreen = ({navigation}: any) => {
       <SectionComponent>
         <RowComponent justify="center">
           <TextComponent text="Don't have an account? " />
-          <ButtonComponent
-            type="link"
-            text="Sign up"
-            onPress={() => navigation.navigate(SignUpScreen)}
-          />
+          <ButtonComponent type="link" text="Sign up" />
         </RowComponent>
       </SectionComponent>
     </ContainerComponent>
   );
 };
 
-export default LoginScreen;
+export default SignUpScreen;
