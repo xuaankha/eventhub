@@ -25,14 +25,14 @@ const LoginScreen = ({navigation}: any) => {
         styles={{
           justifyContent: 'center',
           alignItems: 'center',
-          marginTop: 20,
+          marginTop: 75,
         }}>
         <Image
           source={require('../../assets/images/text-logo.png')}
           style={{
             width: 162,
             height: 114,
-            marginBottom: 10,
+            marginBottom: 30,
           }}
         />
       </SectionComponent>
@@ -66,7 +66,7 @@ const LoginScreen = ({navigation}: any) => {
           </RowComponent>
           <ButtonComponent
             text="Forgot Password?"
-            onPress={() => {}}
+            onPress={() => navigation.navigate('ForgotPassword')}
             type="text"
           />
         </RowComponent>

@@ -10,75 +10,75 @@ import {
   TextComponent,
 } from '../../components';
 import {appColors} from '../../constants/appColors';
-import {Lock, Sms} from 'iconsax-react-native';
+import {Lock, Sms, User} from 'iconsax-react-native';
 import {fontFamilies} from '../../constants/fontFamilies';
 import SocialLogin from './components/SocialLogin';
 
-const SignUpScreen = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isRemember, setIsRemember] = useState(true);
+const initValue = {
+  username: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+};
+const SignUpScreen = ({navigation}: any) => {
+  const [values, setValues] = useState(initValue);
+  const handleChangeValue = (key: string, value: string) => {
+    const data: any = {...values};
+    data[`${key}`] = value;
+    setValues(data);
+  };
   return (
-    <ContainerComponent isImageBackground isScroll>
-      <SectionComponent
-        styles={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: 20,
-        }}>
-        <Image
-          source={require('../../assets/images/text-logo.png')}
-          style={{
-            width: 162,
-            height: 114,
-            marginBottom: 10,
-          }}
-        />
-      </SectionComponent>
+    <ContainerComponent isImageBackground isScroll back>
       <SectionComponent>
-        <TextComponent size={24} title text="Sign in" />
+        <TextComponent size={24} title text="Sign up" />
         <SpaceComponent height={21} />
         <InputComponent
-          value={email}
-          placeholder="Email"
-          onChange={val => setEmail(val)}
+          value={values.username}
+          placeholder="Full name"
+          onChange={val => handleChangeValue('username', val)}
           allowClear
-          affix={<Sms size={22} color={appColors.gray} />}
+          affix={<User size={22} color={appColors.gray} />}
         />
         <InputComponent
-          value={password}
+          value={values.email}
+          placeholder="abc@email.com"
+          onChange={val => handleChangeValue('email', val)}
+          allowClear
+          affix={<Sms size={22} color={appColors.gray} />}
+          //onEnd={() => formValidator('email')}
+        />
+        <InputComponent
+          value={values.password}
           placeholder="Password"
-          onChange={val => setPassword(val)}
+          onChange={val => handleChangeValue('password', val)}
           isPassword
           allowClear
           affix={<Lock size={22} color={appColors.gray} />}
+          //  onEnd={() => formValidator('password')}
         />
-        <RowComponent justify="space-between">
-          <RowComponent onPress={() => setIsRemember(!isRemember)}>
-            <Switch
-              trackColor={{true: appColors.primary}}
-              thumbColor={appColors.white}
-              value={isRemember}
-              onChange={() => setIsRemember(!isRemember)}
-            />
-            <TextComponent text="Remember me" />
-          </RowComponent>
-          <ButtonComponent
-            text="Forgot Password?"
-            onPress={() => {}}
-            type="text"
-          />
-        </RowComponent>
+        <InputComponent
+          value={values.confirmPassword}
+          placeholder="Confirm password"
+          onChange={val => handleChangeValue('confirmPassword', val)}
+          isPassword
+          allowClear
+          affix={<Lock size={22} color={appColors.gray} />}
+          //  onEnd={() => formValidator('confirmPassword')}
+        />
       </SectionComponent>
       <SpaceComponent height={6} />
       <SectionComponent>
-        <ButtonComponent text="SIGN IN" type="primary" />
+        <ButtonComponent text="SIGN UP" type="primary" />
       </SectionComponent>
       <SocialLogin />
       <SectionComponent>
         <RowComponent justify="center">
           <TextComponent text="Don't have an account? " />
-          <ButtonComponent type="link" text="Sign up" />
+          <ButtonComponent
+            type="link"
+            text="Sign in"
+            onPress={() => navigation.navigate('LoginScreen')}
+          />
         </RowComponent>
       </SectionComponent>
     </ContainerComponent>
