@@ -16,6 +16,7 @@
     "@react-navigation/drawer": "^6.6.7",
     "@react-navigation/native": "^6.1.10",
     "@react-navigation/native-stack": "^6.9.18",
+    "axios": "^1.6.8",
     "axios-client": "^0.0.9",
     "iconsax-react-native": "^0.0.8",
     "query-string": "^9.0.0",
