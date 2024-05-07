@@ -15,16 +15,27 @@ import {fontFamilies} from '../../constants/fontFamilies';
 import SocialLogin from './components/SocialLogin';
 import SignUpScreen from './SignUpScreen';
 import authenticationAPI from '../../apis/authApi';
+import {useDispatch} from 'react-redux';
+import {addAuth} from '../../redux/reducers/authReducer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRemember, setIsRemember] = useState(true);
-
+  const dispatch = useDispatch();
   const handleLogin = async () => {
     try {
-      const res = await authenticationAPI.HandleAuthentication('/hello');
-      console.log(res);
+      const res = await authenticationAPI.HandleAuthentication(
+        '/login',
+        {email, password},
+        'post',
+      );
+      dispatch(addAuth(res.data));
+      await AsyncStorage.setItem(
+        'auth',
+        isRemember ? JSON.stringify(res.data) : email,
+      );
     } catch (error) {
       console.log(error);
     }
