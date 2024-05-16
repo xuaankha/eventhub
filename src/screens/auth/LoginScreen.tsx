@@ -1,5 +1,5 @@
 import {View, Text, Image, Switch} from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ButtonComponent,
   ContainerComponent,
@@ -18,12 +18,23 @@ import authenticationAPI from '../../apis/authApi';
 import {useDispatch} from 'react-redux';
 import {addAuth} from '../../redux/reducers/authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Validate} from '../../utils/validate';
 
 const LoginScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isRemember, setIsRemember] = useState(true);
+  const [isDisable, setIsDisable] = useState(true);
   const dispatch = useDispatch();
+  useEffect(() => {
+    const emailValidation = Validate.email(email);
+    if (!email || !password || !emailValidation) {
+      setIsDisable(true);
+    } else {
+      setIsDisable(false);
+    }
+  }, [email, password]);
+
   const handleLogin = async () => {
     try {
       const res = await authenticationAPI.HandleAuthentication(
@@ -95,7 +106,12 @@ const LoginScreen = ({navigation}: any) => {
       </SectionComponent>
       <SpaceComponent height={6} />
       <SectionComponent>
-        <ButtonComponent onPress={handleLogin} text="SIGN IN" type="primary" />
+        <ButtonComponent
+          disable={isDisable}
+          onPress={handleLogin}
+          text="SIGN IN"
+          type="primary"
+        />
       </SectionComponent>
       <SocialLogin />
       <SectionComponent>
