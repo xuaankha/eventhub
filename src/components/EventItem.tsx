@@ -1,12 +1,28 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import {View, Text, Dimensions} from 'react-native';
+import React from 'react';
+import {CardComponent, TextComponent} from '.';
 
-const EventItem = () => {
-  return (
-    <View>
-      <Text>EventItem</Text>
-    </View>
-  )
+interface Props {
+  item: any;
+  type: 'list' | 'card';
+  onPress?: () => void;
 }
 
-export default EventItem
+const EventItem = (props: Props) => {
+  const {item, type, onPress} = props;
+
+  return type === 'card' ? (
+    <CardComponent styles={{width: Dimensions.get('window').width * 0.6}}>
+      <TextComponent
+        numberOfLine={1}
+        title
+        size={18}
+        text="International Band Music Concert"
+      />
+    </CardComponent>
+  ) : (
+    <></>
+  );
+};
+
+export default EventItem;

@@ -1,11 +1,28 @@
-import {View, Text} from 'react-native';
-import React from 'react';
+import {View, Text, TouchableOpacity, StyleProp, ViewStyle} from 'react-native';
+import React, {ReactNode} from 'react';
+import {globalStyles} from '../styles/globalStyles';
+import {appColors} from '../constants/appColors';
 
-const CardComponent = () => {
+interface Props {
+  children: ReactNode;
+  bgColor?: string;
+  styles?: StyleProp<ViewStyle>;
+}
+
+const CardComponent = (props: Props) => {
+  const {children, bgColor, styles} = props;
   return (
-    <View>
-      <Text>CardComponent</Text>
-    </View>
+    <TouchableOpacity
+      style={[
+        globalStyles.shadow,
+        globalStyles.card,
+        {
+          backgroundColor: bgColor ?? appColors.white,
+        },
+        styles,
+      ]}>
+      {children}
+    </TouchableOpacity>
   );
 };
 
