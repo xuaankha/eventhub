@@ -67,7 +67,7 @@ const SocialLogin = () => {
             givenName: profile.firstName,
             familyName: profile.lastName,
             email: profile.userID,
-            photoUrl: profile.imageURL,
+            photo: profile.imageURL,
           };
 
           const res: any = await authenticationAPI.HandleAuthentication(
