@@ -9,6 +9,7 @@ import RowComponent from './RowComponent';
 import SectionComponent from './SectionComponent';
 import SpaceComponent from './SpaceComponent';
 import TagBarComponent from './TagBarComponent';
+import TagComponent from './TagComponent';
 import TextComponent from './TextComponent';
 
 export {
@@ -24,4 +25,5 @@ export {
   TagBarComponent,
   CardComponent,
   EventItem,
+  TagComponent,
 };
