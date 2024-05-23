@@ -7,6 +7,7 @@ import {
 import React from 'react';
 import {
   FlatList,
+  ImageBackground,
   Platform,
   ScrollView,
   StatusBar,
@@ -16,6 +17,7 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {
+  CardComponent,
   CategoriesList,
   CircleComponent,
   EventItem,
@@ -158,21 +160,61 @@ const HomeScreen = ({navigation}: any) => {
         </View>
       </View>
       <ScrollView
+        showsVerticalScrollIndicator={false}
         style={[
           {
             flex: 1,
-            paddingTop: 40,
+            paddingTop: 16,
           },
         ]}>
-        <TagBarComponent title="Upcoming Events" onPress={() => {}} />
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={Array.from({length: 5})}
-          renderItem={({item, index}) => (
-            <EventItem key={`event${index}`} type="card" item={itemEvent} />
-          )}
-        />
+        <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 24}}>
+          <TagBarComponent title="Upcoming Events" onPress={() => {}} />
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={Array.from({length: 5})}
+            renderItem={({item, index}) => (
+              <EventItem key={`event${index}`} type="card" item={itemEvent} />
+            )}
+          />
+        </SectionComponent>
+        <SectionComponent>
+          <ImageBackground
+            source={require('../../assets/images/invite-image.png')}
+            style={{flex: 1, padding: 16, minHeight: 127}}
+            imageStyle={{resizeMode: 'cover', borderRadius: 12}}>
+            <TextComponent text="Invite your friends" title />
+            <TextComponent text="Get $20 for ticket" />
+            <RowComponent justify="flex-start">
+              <TouchableOpacity
+                style={[
+                  globalStyles.button,
+                  {
+                    marginTop: 12,
+                    backgroundColor: '#00F8FF',
+                    paddingHorizontal: 28,
+                  },
+                ]}>
+                <TextComponent
+                  text="INVITE"
+                  font={fontFamilies.bold}
+                  color={appColors.white}
+                />
+              </TouchableOpacity>
+            </RowComponent>
+          </ImageBackground>
+        </SectionComponent>
+        <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 24}}>
+          <TagBarComponent title="Nearby You" onPress={() => {}} />
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={Array.from({length: 5})}
+            renderItem={({item, index}) => (
+              <EventItem key={`event${index}`} type="card" item={itemEvent} />
+            )}
+          />
+        </SectionComponent>
       </ScrollView>
     </View>
   );
