@@ -68,4 +68,14 @@ export const globalStyles = StyleSheet.create({
     backgroundColor: appColors.white,
     margin: 12,
   },
+  noSpaceCard: {
+    alignItems: 'center',
+    width: 45,
+    height: 45,
+    justifyContent: 'center',
+    padding: 0,
+    margin: 0,
+    marginHorizontal: 0,
+    marginVertical: 0,
+  },
 });

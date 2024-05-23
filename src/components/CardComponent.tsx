@@ -4,23 +4,25 @@ import {globalStyles} from '../styles/globalStyles';
 import {appColors} from '../constants/appColors';
 
 interface Props {
+  onPress?: () => void;
   children: ReactNode;
-  bgColor?: string;
+  color?: string;
   styles?: StyleProp<ViewStyle>;
+  isShadow?: boolean;
 }
 
 const CardComponent = (props: Props) => {
-  const {children, bgColor, styles} = props;
+  const {onPress, children, color, styles, isShadow} = props;
+
+  const localStyles: StyleProp<ViewStyle>[] = [
+    globalStyles.card,
+    isShadow ? globalStyles.shadow : undefined,
+    {backgroundColor: color ?? appColors.white},
+    styles,
+  ];
+
   return (
-    <TouchableOpacity
-      style={[
-        globalStyles.shadow,
-        globalStyles.card,
-        {
-          backgroundColor: bgColor ?? appColors.white,
-        },
-        styles,
-      ]}>
+    <TouchableOpacity onPress={onPress} style={localStyles}>
       {children}
     </TouchableOpacity>
   );
