@@ -13,6 +13,7 @@ import {appColors} from '../constants/appColors';
 import {fontFamilies} from '../constants/fontFamilies';
 import {globalStyles} from '../styles/globalStyles';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
 
 interface Props {
   item: EventModel;
@@ -22,13 +23,14 @@ interface Props {
 
 const EventItem = (props: Props) => {
   const {item, type, onPress} = props;
-  console.log(item);
+
+  const navigation: any = useNavigation();
 
   return type === 'card' ? (
     <CardComponent
       isShadow
       styles={{width: Dimensions.get('window').width * 0.7}}
-      onPress={() => {}}>
+      onPress={() => navigation.navigate('EventDetail', {item})}>
       <ImageBackground
         style={{flex: 1, marginBottom: 12, height: 131, padding: 10}}
         source={require('../assets/images/demo-event-image.png')}

@@ -17,14 +17,13 @@ import {
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {
-  CardComponent,
   CategoriesList,
   CircleComponent,
   EventItem,
   RowComponent,
   SectionComponent,
   SpaceComponent,
-  TagBarComponent,
+  TabBarComponent,
   TextComponent,
 } from '../../components';
 import {appColors} from '../../constants/appColors';
@@ -55,11 +54,10 @@ const HomeScreen = ({navigation}: any) => {
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />
-
       <View
         style={{
           backgroundColor: appColors.primary,
-          height: 178 + (Platform.OS === 'ios' ? 16 : 0),
+          height: Platform.OS === 'android' ? 166 : 182,
           borderBottomLeftRadius: 40,
           borderBottomRightRadius: 40,
           paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 52,
@@ -156,7 +154,7 @@ const HomeScreen = ({navigation}: any) => {
           <SpaceComponent height={24} />
         </View>
         <View style={{marginBottom: -16}}>
-          <CategoriesList isColor />
+          <CategoriesList isFill />
         </View>
       </View>
       <ScrollView
@@ -164,11 +162,11 @@ const HomeScreen = ({navigation}: any) => {
         style={[
           {
             flex: 1,
-            paddingTop: 16,
+            marginTop: Platform.OS === 'ios' ? 22 : 18,
           },
         ]}>
         <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 24}}>
-          <TagBarComponent title="Upcoming Events" onPress={() => {}} />
+          <TabBarComponent title="Upcoming Events" onPress={() => {}} />
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -205,7 +203,7 @@ const HomeScreen = ({navigation}: any) => {
           </ImageBackground>
         </SectionComponent>
         <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 24}}>
-          <TagBarComponent title="Nearby You" onPress={() => {}} />
+          <TabBarComponent title="Nearby You" onPress={() => {}} />
           <FlatList
             horizontal
             showsHorizontalScrollIndicator={false}

@@ -9,7 +9,7 @@ import InputComponent from './InputComponent';
 import RowComponent from './RowComponent';
 import SectionComponent from './SectionComponent';
 import SpaceComponent from './SpaceComponent';
-import TagBarComponent from './TagBarComponent';
+import TabBarComponent from './TabBarComponent';
 import TagComponent from './TagComponent';
 import TextComponent from './TextComponent';
 
@@ -23,7 +23,7 @@ export {
   RowComponent,
   CircleComponent,
   CategoriesList,
-  TagBarComponent,
+  TabBarComponent,
   CardComponent,
   EventItem,
   TagComponent,
