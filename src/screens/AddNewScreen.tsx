@@ -13,6 +13,7 @@ import {
 } from '../components';
 import {useSelector} from 'react-redux';
 import {authSelector} from '../redux/reducers/authReducer';
+import userAPI from '../apis/userApi';
 
 const initValues = {
   title: '',
@@ -32,6 +33,7 @@ const initValues = {
 const AddNewScreen = () => {
   const auth = useSelector(authSelector);
 
+  console.log(auth);
   const [eventData, setEventData] = useState<any>({
     ...initValues,
     authorId: auth.id,
@@ -43,14 +45,13 @@ const AddNewScreen = () => {
     setEventData(items);
   };
   const handleAddEvent = async () => {
-    console.log(eventData);
+    const res = await userAPI.HandleUser('/');
   };
 
   const handleLocation = (val: any) => {
     const items = {...eventData};
     items.position = val.postion;
     items.locationAddress = val.address;
-
     setEventData(items);
   };
   return (
@@ -94,7 +95,7 @@ const AddNewScreen = () => {
           label="Date"
           type="date"
           onSelect={val => handleChangeValue('date', val)}
-          selected={eventData.date} 
+          selected={eventData.date}
         />
         <InputComponent
           placeholder="Title Address"
