@@ -5,7 +5,7 @@ import {fontFamilies} from '../constants/fontFamilies';
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: appColors.white,
+    backgroundColor: 'white',
   },
 
   text: {
@@ -102,5 +102,10 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
     // paddingHorizontal: 14,
     color: appColors.text,
+  },
+
+  center: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -1,4 +1,4 @@
-import {View, Text, Image, Switch} from 'react-native';
+import {View, Text, Image, Switch, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {
   ButtonComponent,
@@ -25,6 +25,7 @@ const LoginScreen = ({navigation}: any) => {
   const [password, setPassword] = useState('');
   const [isRemember, setIsRemember] = useState(true);
   const [isDisable, setIsDisable] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
     const emailValidation = Validate.email(email);
@@ -36,19 +37,26 @@ const LoginScreen = ({navigation}: any) => {
   }, [email, password]);
 
   const handleLogin = async () => {
-    try {
-      const res = await authenticationAPI.HandleAuthentication(
-        '/login',
-        {email, password},
-        'post',
-      );
-      dispatch(addAuth(res.data));
-      await AsyncStorage.setItem(
-        'auth',
-        isRemember ? JSON.stringify(res.data) : email,
-      );
-    } catch (error) {
-      console.log(error);
+    const emailValidation = Validate.email(email);
+    if (emailValidation) {
+      setIsLoading(true);
+      try {
+        const res = await authenticationAPI.HandleAuthentication(
+          '/login',
+          {email, password},
+          'post',
+        );
+        dispatch(addAuth(res.data));
+        await AsyncStorage.setItem(
+          'auth',
+          isRemember ? JSON.stringify(res.data) : email,
+        );
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
+    } else {
+      Alert.alert('Email is not correct!!!');
     }
   };
 
@@ -107,7 +115,7 @@ const LoginScreen = ({navigation}: any) => {
       <SpaceComponent height={6} />
       <SectionComponent>
         <ButtonComponent
-          disable={isDisable}
+          disable={isLoading || isDisable}
           onPress={handleLogin}
           text="SIGN IN"
           type="primary"

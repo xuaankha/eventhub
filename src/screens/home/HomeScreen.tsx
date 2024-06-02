@@ -4,7 +4,7 @@ import {
   SearchNormal1,
   Sort,
 } from 'iconsax-react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   ImageBackground,
@@ -30,11 +30,40 @@ import {appColors} from '../../constants/appColors';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {authSelector} from '../../redux/reducers/authReducer';
 import {globalStyles} from '../../styles/globalStyles';
+import Geolocation from '@react-native-community/geolocation';
+import axios from 'axios';
+import {AddressModel} from '../../models/AddressModel';
 
 const HomeScreen = ({navigation}: any) => {
+  const [currentLocation, setCurrentLocation] = useState<AddressModel>();
+
   const dispatch = useDispatch();
 
   const auth = useSelector(authSelector);
+
+  useEffect(() => {
+    Geolocation.getCurrentPosition(position => {
+      if (position.coords) {
+        reverseGeoCode({
+          lat: position.coords.latitude,
+          long: position.coords.longitude,
+        });
+      }
+    });
+  });
+
+  const reverseGeoCode = async ({lat, long}: {lat: number; long: number}) => {
+    const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=en-EN&apiKey=EoGZAqvCk9NFBvK6Trb_9iudji1DWPy1QfnsJN0GRlo`;
+    try {
+      const res = await axios(api);
+      if (res && res.status === 200 && res.data) {
+        const items = res.data.items;
+        setCurrentLocation(items[0]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const itemEvent = {
     title: 'International Band Music Concert',
@@ -51,6 +80,7 @@ const HomeScreen = ({navigation}: any) => {
     endAt: Date.now(),
     date: Date.now(),
   };
+
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />
@@ -80,13 +110,15 @@ const HomeScreen = ({navigation}: any) => {
                   color={appColors.white}
                 />
               </RowComponent>
-              <TextComponent
-                text="New York, USA"
-                flex={0}
-                color={appColors.white}
-                font={fontFamilies.medium}
-                size={13}
-              />
+              {currentLocation && (
+                <TextComponent
+                  text={`${currentLocation.address.city}, ${currentLocation.address.countryName}`}
+                  flex={0}
+                  color={appColors.white}
+                  font={fontFamilies.medium}
+                  size={13}
+                />
+              )}
             </View>
 
             <CircleComponent color="#524CE0" size={36}>
