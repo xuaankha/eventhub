@@ -74,9 +74,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.nxk.eventhub"
+    namespace "com.khakltn.eventhubapp"
     defaultConfig {
-        applicationId "com.eventhub"
+        applicationId "com.khakltn.eventhubapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

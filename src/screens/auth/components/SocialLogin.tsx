@@ -18,7 +18,7 @@ import {addAuth} from '../../../redux/reducers/authReducer';
 
 GoogleSignin.configure({
   webClientId:
-    '583149491131-6bi039uglvrp4u0sv98td4bjs2ptgjl0.apps.googleusercontent.com',
+    '17399897186-0uint7rilvhdmkscahd09ov0v0ciamq4.apps.googleusercontent.com',
 });
 Settings.setAppID('403347206007885');
 
@@ -27,6 +27,7 @@ const SocialLogin = () => {
 
   const api = `/google-signin`;
   const dispatch = useDispatch();
+
   const handleLoginWithGoogle = async () => {
     await GoogleSignin.hasPlayServices({
       showPlayServicesUpdateDialog: true,
@@ -43,7 +44,9 @@ const SocialLogin = () => {
         'post',
       );
 
-      console.log(res);
+      dispatch(addAuth(res.data));
+
+      await AsyncStorage.setItem('auth', JSON.stringify(res.data));
     } catch (error) {
       console.log(error);
     }
