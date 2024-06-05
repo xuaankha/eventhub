@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "17399897186",
+    "project_id": "grand-radio-425503-a6",
+    "storage_bucket": "grand-radio-425503-a6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:17399897186:android:29ec603a80f1798e38053b",
+        "android_client_info": {
+          "package_name": "com.khakltn.eventhubapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "17399897186-0uint7rilvhdmkscahd09ov0v0ciamq4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDd4E_sFIJpeIRdy0PjMLY7uEr2WUaZXoM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "17399897186-0uint7rilvhdmkscahd09ov0v0ciamq4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
