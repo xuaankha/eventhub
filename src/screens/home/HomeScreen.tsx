@@ -33,13 +33,19 @@ import {globalStyles} from '../../styles/globalStyles';
 import Geolocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import {AddressModel} from '../../models/AddressModel';
+import Geocoder from 'react-native-geocoding';
 
+//Geocoder.init(process.env.MAP_API_KEY as string);
 const HomeScreen = ({navigation}: any) => {
   const [currentLocation, setCurrentLocation] = useState<AddressModel>();
 
   const dispatch = useDispatch();
 
   const auth = useSelector(authSelector);
+
+  useEffect(() => {
+    reverseGeoCode({lat: 11.189481, long: 107.3633735});
+  }, []);
 
   useEffect(() => {
     Geolocation.getCurrentPosition(position => {
@@ -50,13 +56,14 @@ const HomeScreen = ({navigation}: any) => {
         });
       }
     });
-  });
+  }, []);
 
   const reverseGeoCode = async ({lat, long}: {lat: number; long: number}) => {
-    const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=en-EN&apiKey=EoGZAqvCk9NFBvK6Trb_9iudji1DWPy1QfnsJN0GRlo`;
+    const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=QwAeSygM4xmOS1t0h8q9x7Bbb8LVGtGiLeqPl-flwl8`;
     try {
       const res = await axios(api);
       if (res && res.status === 200 && res.data) {
+        console.log(res.data);
         const items = res.data.items;
         setCurrentLocation(items[0]);
       }
