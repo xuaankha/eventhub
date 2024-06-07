@@ -45,7 +45,7 @@ const AddNewScreen = () => {
     setEventData(items);
   };
   const handleAddEvent = async () => {
-    const res = await userAPI.HandleUser('/');
+    const res = await userAPI.HandleUser('/get-all');
   };
 
   const handleLocation = (val: any) => {
