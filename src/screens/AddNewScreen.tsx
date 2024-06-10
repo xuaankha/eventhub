@@ -5,6 +5,7 @@ import {
   ChoiceLocation,
   ContainerComponent,
   DateTimePicker,
+  DropdownPicker,
   InputComponent,
   RowComponent,
   SectionComponent,
@@ -97,6 +98,7 @@ const AddNewScreen = () => {
           onSelect={val => handleChangeValue('date', val)}
           selected={eventData.date}
         />
+        <DropdownPicker />
         <InputComponent
           placeholder="Title Address"
           allowClear
