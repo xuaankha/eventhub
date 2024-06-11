@@ -63,7 +63,6 @@ const HomeScreen = ({navigation}: any) => {
     try {
       const res = await axios(api);
       if (res && res.status === 200 && res.data) {
-        console.log(res.data);
         const items = res.data.items;
         setCurrentLocation(items[0]);
       }

@@ -1,12 +1,16 @@
+import GeoLocation from '@react-native-community/geolocation';
+import axios from 'axios';
+import {SearchNormal1} from 'iconsax-react-native';
+import React, {useEffect, useState} from 'react';
 import {
-  View,
-  Text,
-  Modal,
   ActivityIndicator,
   FlatList,
+  Modal,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
+import GeoCoder from 'react-native-geocoding';
+import MapView from 'react-native-maps';
 import {
   ButtonComponent,
   InputComponent,
@@ -14,19 +18,11 @@ import {
   SpaceComponent,
   TextComponent,
 } from '../components';
-import axios from 'axios';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {appColors} from '../constants/appColors';
-import {SearchNormal1} from 'iconsax-react-native';
-import {LocationModel} from '../models/LocationModel';
-import MapView from 'react-native-maps';
 import {appInfo} from '../constants/appInfos';
-import {AddressModel} from '../models/AddressModel';
-import Geolocation from '@react-native-community/geolocation';
-import Geocoder from 'react-native-geocoding';
-import {Marker} from 'react-native-svg';
+import {LocationModel} from '../models/LocationModel';
 
-Geocoder.init(process.env.MAP_API_KEY as string);
+GeoCoder.init(process.env.MAP_API_KEY as string);
 
 interface Props {
   visible: boolean;
@@ -46,27 +42,41 @@ const ModalLocation = (props: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [locations, setLocations] = useState<LocationModel[]>([]);
   const [addressSelected, setAddressSelected] = useState('');
+
   const [currentLocation, setCurrentLocation] = useState<{
     lat: number;
     long: number;
   }>();
-  useEffect(() => {
-    Geolocation.getCurrentPosition(position => {
-      if (position.coords) {
-        setCurrentLocation({
-          lat: position.coords.latitude,
-          long: position.coords.longitude,
-        });
-      }
-    });
-  }, []);
 
   useEffect(() => {
-    Geocoder.from(addressSelected).then(res => {
-      const position = res.results[0].geometry.location;
-      setCurrentLocation({lat: position.lat, long: position.lng});
-    });
-  }, [addressSelected]);
+    GeoLocation.getCurrentPosition(
+      position => {
+        if (position.coords) {
+          setCurrentLocation({
+            lat: position.coords.latitude,
+            long: position.coords.longitude,
+          });
+        }
+      },
+      error => {
+        console.log(error);
+      },
+      {},
+    );
+  }, []);
+
+  // useEffect(() => {
+  //   GeoCoder.from(addressSelected)
+  //     .then(res => {
+  //       const position = res.results[0].geometry.location;
+
+  //       setCurrentLocation({
+  //         lat: position.lat,
+  //         long: position.lng,
+  //       });
+  //     })
+  //     .catch(error => console.log(error));
+  // }, [addressSelected]);
 
   useEffect(() => {
     if (!searchKey) {
@@ -79,17 +89,45 @@ const ModalLocation = (props: Props) => {
   };
 
   const handleSearchLocation = async () => {
-    const api = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${searchKey}&limit=20&apiKey=QwAeSygM4xmOS1t0h8q9x7Bbb8LVGtGiLeqPl-flwl8`;
+    const api = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${searchKey}&limit=20&apiKey=EoGZAqvCk9NFBvK6Trb_9iudji1DWPy1QfnsJN0GRlo`;
+
     try {
       setIsLoading(true);
       const res = await axios.get(api);
+
       if (res && res.data && res.status === 200) {
         setLocations(res.data.items);
       }
+
       setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleGetAddressFromPosition = ({
+    latitude,
+    longitude,
+  }: {
+    latitude: number;
+    longitude: number;
+  }) => {
+    onSelect({
+      address: 'This is demo address',
+      postion: {
+        lat: latitude,
+        long: longitude,
+      },
+    });
+    onClose();
+    // GeoCoder.from(latitude, longitude)
+    //   .then(data => {
+    //     console.log(data);
+    //     console.log(data.results[0].address_components[0]);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
   };
 
   return (
@@ -105,16 +143,14 @@ const ModalLocation = (props: Props) => {
               placeholder="Search"
               value={searchKey}
               allowClear
-              onChange={val => {
-                setSearchKey(val);
-              }}
+              onChange={val => setSearchKey(val)}
               onEnd={handleSearchLocation}
             />
           </View>
           <View
             style={{
               position: 'absolute',
-              top: 60,
+              top: 56,
               right: 10,
               left: 10,
               backgroundColor: appColors.white,
@@ -130,7 +166,8 @@ const ModalLocation = (props: Props) => {
                   <TouchableOpacity
                     style={{marginBottom: 12}}
                     onPress={() => {
-                      setAddressSelected(item.address.label), setSearchKey('');
+                      setAddressSelected(item.address.label);
+                      setSearchKey('');
                     }}>
                     <TextComponent text={item.address.label} />
                   </TouchableOpacity>
@@ -139,7 +176,7 @@ const ModalLocation = (props: Props) => {
             ) : (
               <View>
                 <TextComponent
-                  text={searchKey ? 'Location not found' : 'Search Location'}
+                  text={searchKey ? 'Location not found' : 'Search location'}
                 />
               </View>
             )}
@@ -151,7 +188,7 @@ const ModalLocation = (props: Props) => {
           <MapView
             style={{
               width: appInfo.sizes.WIDTH,
-              height: 500,
+              height: appInfo.sizes.HEIGHT - 220,
               marginVertical: 40,
               zIndex: -1,
             }}
@@ -163,6 +200,9 @@ const ModalLocation = (props: Props) => {
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}
+            onPress={event =>
+              handleGetAddressFromPosition(event.nativeEvent.coordinate)
+            }
             region={{
               latitude: currentLocation.lat,
               longitude: currentLocation.long,
@@ -172,17 +212,27 @@ const ModalLocation = (props: Props) => {
             mapType="standard"
           />
         )}
-        <ButtonComponent
-          text="Confirm"
-          onPress={() => {
-            onSelect({
-              address: addressSelected,
-              postion: currentLocation,
-            });
-            onClose();
-          }}
-          type="primary"
-        />
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 10,
+            left: 0,
+            right: 0,
+          }}>
+          <ButtonComponent
+            styles={{marginBottom: 40}}
+            text="Confirm"
+            onPress={() => {
+              onSelect({
+                address: addressSelected,
+                postion: currentLocation,
+              });
+
+              onClose();
+            }}
+            type="primary"
+          />
+        </View>
       </View>
     </Modal>
   );
