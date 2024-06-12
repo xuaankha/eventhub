@@ -1,3 +1,4 @@
+import AvatarComponent from './AvatarComponent';
 import AvatarGroup from './AvatarGroup';
 import ButtonComponent from './ButtonComponent';
 import ButtonImagePicker from './ButtonImagePicker';
@@ -10,13 +11,21 @@ import DateTimePicker from './DateTimePicker';
 import DropdownPicker from './DropdownPicker';
 import EventItem from './EventItem';
 import InputComponent from './InputComponent';
+import ListEventComponent from './ListEventComponent';
+import LoadingComponent from './LoadingComponent';
+
 import MakerCustom from './MakerCustom';
+import NotificationItem from './NotificationItem';
+
+import RadioButtons from './RadioButtons';
+
 import RowComponent from './RowComponent';
 import SectionComponent from './SectionComponent';
 import SpaceComponent from './SpaceComponent';
 import TabBarComponent from './TabBarComponent';
 import TagComponent from './TagComponent';
 import TextComponent from './TextComponent';
+import UserComponent from './UserComponent';
 
 export {
   SpaceComponent,
@@ -27,15 +36,21 @@ export {
   ContainerComponent,
   RowComponent,
   CircleComponent,
+  TagComponent,
   CategoriesList,
   TabBarComponent,
-  CardComponent,
   EventItem,
-  TagComponent,
+  CardComponent,
   AvatarGroup,
   ChoiceLocation,
   DateTimePicker,
   DropdownPicker,
   ButtonImagePicker,
   MakerCustom,
+  LoadingComponent,
+  AvatarComponent,
+  UserComponent,
+  ListEventComponent,
+  RadioButtons,
+  NotificationItem,
 };
