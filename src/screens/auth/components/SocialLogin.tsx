@@ -29,15 +29,18 @@ const SocialLogin = () => {
   const dispatch = useDispatch();
 
   const handleLoginWithGoogle = async () => {
+    setIsLoading(true);
     await GoogleSignin.hasPlayServices({
       showPlayServicesUpdateDialog: true,
     });
+
     try {
       await GoogleSignin.hasPlayServices();
-
       const userInfo = await GoogleSignin.signIn();
-
       const user = userInfo.user;
+
+      console.log(user);
+
       const res: any = await authenticationAPI.HandleAuthentication(
         api,
         user,
@@ -47,8 +50,10 @@ const SocialLogin = () => {
       dispatch(addAuth(res.data));
 
       await AsyncStorage.setItem('auth', JSON.stringify(res.data));
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
 
