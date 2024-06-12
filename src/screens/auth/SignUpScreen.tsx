@@ -1,5 +1,6 @@
-import {View, Text, Image, Switch} from 'react-native';
+import {Lock, Sms, User} from 'iconsax-react-native';
 import React, {useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 import {
   ButtonComponent,
   ContainerComponent,
@@ -10,17 +11,12 @@ import {
   TextComponent,
 } from '../../components';
 import {appColors} from '../../constants/appColors';
-import {Lock, Sms, User} from 'iconsax-react-native';
-import {fontFamilies} from '../../constants/fontFamilies';
-import SocialLogin from './components/SocialLogin';
 import {LoadingModal} from '../../modals';
-import authenticationAPI from '../../apis/authApi';
 import {Validate} from '../../utils/validate';
-import {useDispatch} from 'react-redux';
-import {addAuth} from '../../redux/reducers/authReducer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import SocialLogin from './components/SocialLogin';
+import authenticationAPI from '../../apis/authApi';
 
-interface ErrorMessage {
+interface ErrorMessages {
   email: string;
   password: string;
   confirmPassword: string;
@@ -69,29 +65,37 @@ const SignUpScreen = ({navigation}: any) => {
   const formValidator = (key: string) => {
     const data = {...errorMessage};
     let message = ``;
+
     switch (key) {
       case 'email':
         if (!values.email) {
-          message = 'Email is required!!!';
+          message = `Email is required!!!`;
         } else if (!Validate.email(values.email)) {
-          message = 'Email not validated';
+          message = 'Email is not invalid!!';
         } else {
-          message: '';
+          message = '';
         }
+
         break;
+
       case 'password':
         message = !values.password ? `Password is required!!!` : '';
         break;
+
       case 'confirmPassword':
-        if (!values.confirmPassword) message = `Please type confirm password!!`;
-        else if (values.confirmPassword !== values.password) {
+        if (!values.confirmPassword) {
+          message = `Please type confirm password!!`;
+        } else if (values.confirmPassword !== values.password) {
           message = 'Password is not match!!!';
         } else {
           message = '';
         }
+
         break;
     }
+
     data[`${key}`] = message;
+
     setErrorMessage(data);
   };
 
@@ -104,7 +108,7 @@ const SignUpScreen = ({navigation}: any) => {
         {email: values.email},
         'post',
       );
-      console.log(res);
+
       setIsLoading(false);
 
       navigation.navigate('Verification', {
@@ -172,21 +176,19 @@ const SignUpScreen = ({navigation}: any) => {
             )}
           </SectionComponent>
         )}
-
         <SpaceComponent height={16} />
-
         <SectionComponent>
           <ButtonComponent
             onPress={handleRegister}
-            disable={isDisable}
             text="SIGN UP"
+            disable={isDisable}
             type="primary"
           />
         </SectionComponent>
         <SocialLogin />
         <SectionComponent>
           <RowComponent justify="center">
-            <TextComponent text="Don't have an account? " />
+            <TextComponent text="Don’t have an account? " />
             <ButtonComponent
               type="link"
               text="Sign in"
@@ -194,8 +196,8 @@ const SignUpScreen = ({navigation}: any) => {
             />
           </RowComponent>
         </SectionComponent>
-        <LoadingModal visible={isLoading} />
       </ContainerComponent>
+      <LoadingModal visible={isLoading} />
     </>
   );
 };

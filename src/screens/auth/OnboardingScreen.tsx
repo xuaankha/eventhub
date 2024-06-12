@@ -4,9 +4,8 @@ import Swiper from 'react-native-swiper';
 import {appColors} from '../../constants/appColors';
 import {appInfo} from '../../constants/appInfos';
 import {globalStyles} from '../../styles/globalStyles';
-
+import {TextComponent} from '../../components';
 import {fontFamilies} from '../../constants/fontFamilies';
-import TextComponent from '../../components/TextComponent';
 
 const OnboardingScreen = ({navigation}: any) => {
   const [index, setIndex] = useState(0);
