@@ -24,31 +24,28 @@ import {
   SectionComponent,
   SpaceComponent,
   TabBarComponent,
+  TagComponent,
   TextComponent,
 } from '../../components';
 import {appColors} from '../../constants/appColors';
 import {fontFamilies} from '../../constants/fontFamilies';
 import {authSelector} from '../../redux/reducers/authReducer';
 import {globalStyles} from '../../styles/globalStyles';
-import Geolocation from '@react-native-community/geolocation';
+import GeoLocation from '@react-native-community/geolocation';
 import axios from 'axios';
 import {AddressModel} from '../../models/AddressModel';
 import Geocoder from 'react-native-geocoding';
+import eventAPI from '../../apis/eventApi';
+import {EventModel} from '../../models/EventModel';
 
-//Geocoder.init(process.env.MAP_API_KEY as string);
+Geocoder.init(process.env.MAP_API_KEY as string);
 const HomeScreen = ({navigation}: any) => {
   const [currentLocation, setCurrentLocation] = useState<AddressModel>();
-
-  const dispatch = useDispatch();
-
-  const auth = useSelector(authSelector);
+  const [events, setEvents] = useState<EventModel[]>([]);
+  const [nearbyEvents, setNearbyEvents] = useState<EventModel[]>([]);
 
   useEffect(() => {
-    reverseGeoCode({lat: 11.189481, long: 107.3633735});
-  }, []);
-
-  useEffect(() => {
-    Geolocation.getCurrentPosition(position => {
+    GeoLocation.getCurrentPosition(position => {
       if (position.coords) {
         reverseGeoCode({
           lat: position.coords.latitude,
@@ -56,12 +53,22 @@ const HomeScreen = ({navigation}: any) => {
         });
       }
     });
+
+    getEvents();
   }, []);
 
+  useEffect(() => {
+    currentLocation &&
+      currentLocation.position &&
+      getEvents(currentLocation.position.lat, currentLocation.position.lng);
+  }, [currentLocation]);
+
   const reverseGeoCode = async ({lat, long}: {lat: number; long: number}) => {
-    const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=QwAeSygM4xmOS1t0h8q9x7Bbb8LVGtGiLeqPl-flwl8`;
+    const api = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${long}&lang=vi-VI&apiKey=zCDIlA5ytRuEe3YS9YrJlzAGjTkxsy4S6mJtq7ZpkGU`;
+
     try {
       const res = await axios(api);
+
       if (res && res.status === 200 && res.data) {
         const items = res.data.items;
         setCurrentLocation(items[0]);
@@ -71,25 +78,31 @@ const HomeScreen = ({navigation}: any) => {
     }
   };
 
-  const itemEvent = {
-    title: 'International Band Music Concert',
-    description:
-      'Enjoy your favorite dishe and a lovely your friends and family and have a great time. Food from local food trucks will be available for purchase.',
-    location: {
-      title: 'Gala Convention Center',
-      address: '36 Guild Street London, UK ',
-    },
-    imageUrl: '',
-    users: [''],
-    authorId: '',
-    startAt: Date.now(),
-    endAt: Date.now(),
-    date: Date.now(),
+  const getEvents = async (lat?: number, long?: number) => {
+    const api =
+      lat && long
+        ? `/get-events?lat=${lat}&long=${long}&distance=${5}`
+        : '/get-events';
+
+    try {
+      const res = await eventAPI.HandleEvent(api);
+
+      if (res && res.data) {
+        lat && long
+          ? setNearbyEvents(res.data)
+          : setEvents(
+              res.data.sort((a: any, b: any) => a.createdAt - b.createdAt),
+            );
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />
+
       <View
         style={{
           backgroundColor: appColors.primary,
@@ -118,7 +131,7 @@ const HomeScreen = ({navigation}: any) => {
               </RowComponent>
               {currentLocation && (
                 <TextComponent
-                  text={`${currentLocation.address.city}, ${currentLocation.address.countryName}`}
+                  text={`${currentLocation.address.city}, ${currentLocation.address.county}`}
                   flex={0}
                   color={appColors.white}
                   font={fontFamilies.medium}
@@ -146,7 +159,7 @@ const HomeScreen = ({navigation}: any) => {
               </View>
             </CircleComponent>
           </RowComponent>
-          <SpaceComponent height={24} />
+          <SpaceComponent height={20} />
           <RowComponent>
             <RowComponent
               styles={{flex: 1}}
@@ -157,39 +170,40 @@ const HomeScreen = ({navigation}: any) => {
               }>
               <SearchNormal1
                 variant="TwoTone"
-                size={22}
                 color={appColors.white}
+                size={20}
               />
               <View
                 style={{
                   width: 1,
-                  height: 18,
-                  marginHorizontal: 12,
-                  backgroundColor: '#A29EF0',
+                  backgroundColor: appColors.gray2,
+                  marginHorizontal: 10,
+                  height: 20,
                 }}
               />
-              <TextComponent text="Search..." color={`#A29EF0`} flex={1} />
+              <TextComponent
+                flex={1}
+                text="Search..."
+                color={appColors.gray2}
+                size={16}
+              />
             </RowComponent>
-            <RowComponent
+            <TagComponent
+              bgColor={'#5D56F3'}
               onPress={() =>
                 navigation.navigate('SearchEvents', {
                   isFilter: true,
                 })
               }
-              styles={{
-                backgroundColor: '#5D56F3',
-                paddingHorizontal: 12,
-                paddingVertical: 8,
-                borderRadius: 100,
-              }}>
-              <CircleComponent size={19.3} color={`#A29EF0`}>
-                <Sort size={12} color={appColors.primary} />
-              </CircleComponent>
-              <SpaceComponent width={8} />
-              <TextComponent text="Filters" color={appColors.white} />
-            </RowComponent>
+              label="Filters"
+              icon={
+                <CircleComponent size={20} color="#B1AEFA">
+                  <Sort size={16} color="#5D56F3" />
+                </CircleComponent>
+              }
+            />
           </RowComponent>
-          <SpaceComponent height={24} />
+          <SpaceComponent height={20} />
         </View>
         <View style={{marginBottom: -16}}>
           <CategoriesList isFill />
@@ -206,11 +220,12 @@ const HomeScreen = ({navigation}: any) => {
         <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 24}}>
           <TabBarComponent title="Upcoming Events" onPress={() => {}} />
           <FlatList
-            horizontal
             showsHorizontalScrollIndicator={false}
-            data={Array.from({length: 5})}
+            horizontal
+            inverted
+            data={events}
             renderItem={({item, index}) => (
-              <EventItem key={`event${index}`} type="card" item={itemEvent} />
+              <EventItem key={`event${index}`} item={item} type="card" />
             )}
           />
         </SectionComponent>
@@ -218,9 +233,13 @@ const HomeScreen = ({navigation}: any) => {
           <ImageBackground
             source={require('../../assets/images/invite-image.png')}
             style={{flex: 1, padding: 16, minHeight: 127}}
-            imageStyle={{resizeMode: 'cover', borderRadius: 12}}>
+            imageStyle={{
+              resizeMode: 'cover',
+              borderRadius: 12,
+            }}>
             <TextComponent text="Invite your friends" title />
             <TextComponent text="Get $20 for ticket" />
+
             <RowComponent justify="flex-start">
               <TouchableOpacity
                 style={[
@@ -243,11 +262,11 @@ const HomeScreen = ({navigation}: any) => {
         <SectionComponent styles={{paddingHorizontal: 0, paddingTop: 24}}>
           <TabBarComponent title="Nearby You" onPress={() => {}} />
           <FlatList
-            horizontal
             showsHorizontalScrollIndicator={false}
-            data={Array.from({length: 5})}
+            horizontal
+            data={nearbyEvents}
             renderItem={({item, index}) => (
-              <EventItem key={`event${index}`} type="card" item={itemEvent} />
+              <EventItem key={`event${index}`} item={item} type="card" />
             )}
           />
         </SectionComponent>
