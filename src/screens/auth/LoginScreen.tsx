@@ -1,5 +1,9 @@
-import {View, Text, Image, Switch, Alert} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Lock, Sms} from 'iconsax-react-native';
 import React, {useEffect, useState} from 'react';
+import {Alert, Image, Switch} from 'react-native';
+import {useDispatch} from 'react-redux';
+import authenticationAPI from '../../apis/authApi';
 import {
   ButtonComponent,
   ContainerComponent,
@@ -10,15 +14,10 @@ import {
   TextComponent,
 } from '../../components';
 import {appColors} from '../../constants/appColors';
-import {Lock, Sms} from 'iconsax-react-native';
-import {fontFamilies} from '../../constants/fontFamilies';
-import SocialLogin from './components/SocialLogin';
-import SignUpScreen from './SignUpScreen';
-import authenticationAPI from '../../apis/authApi';
-import {useDispatch} from 'react-redux';
+import {LoadingModal} from '../../modals';
 import {addAuth} from '../../redux/reducers/authReducer';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Validate} from '../../utils/validate';
+import SocialLogin from './components/SocialLogin';
 
 const LoginScreen = ({navigation}: any) => {
   const [email, setEmail] = useState('');
@@ -26,9 +25,12 @@ const LoginScreen = ({navigation}: any) => {
   const [isRemember, setIsRemember] = useState(true);
   const [isDisable, setIsDisable] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+
   const dispatch = useDispatch();
+
   useEffect(() => {
     const emailValidation = Validate.email(email);
+
     if (!email || !password || !emailValidation) {
       setIsDisable(true);
     } else {
@@ -38,6 +40,7 @@ const LoginScreen = ({navigation}: any) => {
 
   const handleLogin = async () => {
     const emailValidation = Validate.email(email);
+    setIsLoading(true);
     if (emailValidation) {
       setIsLoading(true);
       try {
@@ -47,16 +50,20 @@ const LoginScreen = ({navigation}: any) => {
           'post',
         );
         dispatch(addAuth(res.data));
+
         await AsyncStorage.setItem(
           'auth',
           isRemember ? JSON.stringify(res.data) : email,
         );
+
+        setIsLoading(false);
       } catch (error) {
         console.log(error);
+
         setIsLoading(false);
       }
     } else {
-      Alert.alert('Email is not correct!!!');
+      Alert.alert('Email is not correct!!!!');
     }
   };
 
@@ -103,6 +110,7 @@ const LoginScreen = ({navigation}: any) => {
               value={isRemember}
               onChange={() => setIsRemember(!isRemember)}
             />
+            <SpaceComponent width={4} />
             <TextComponent text="Remember me" />
           </RowComponent>
           <ButtonComponent
@@ -112,7 +120,7 @@ const LoginScreen = ({navigation}: any) => {
           />
         </RowComponent>
       </SectionComponent>
-      <SpaceComponent height={6} />
+      <SpaceComponent height={16} />
       <SectionComponent>
         <ButtonComponent
           disable={isLoading || isDisable}
@@ -121,17 +129,22 @@ const LoginScreen = ({navigation}: any) => {
           type="primary"
         />
       </SectionComponent>
+
+      {/* <TouchableOpacity onPress={async () => await GoogleSignin.signOut()}>
+        <TextComponent text="fafafa" />
+      </TouchableOpacity> */}
       <SocialLogin />
       <SectionComponent>
         <RowComponent justify="center">
-          <TextComponent text="Don't have an account? " />
+          <TextComponent text="Don’t have an account? " />
           <ButtonComponent
             type="link"
             text="Sign up"
-            onPress={() => navigation.navigate(SignUpScreen)}
+            onPress={() => navigation.navigate('SignUpScreen')}
           />
         </RowComponent>
       </SectionComponent>
+      <LoadingModal visible={isLoading} />
     </ContainerComponent>
   );
 };
