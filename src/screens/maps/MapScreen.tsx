@@ -5,7 +5,6 @@ import {FlatList, StatusBar, TouchableOpacity, View} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import eventAPI from '../../apis/eventApi';
-import {KnifeFork_Color} from '../../assets/svgs';
 import {
   CardComponent,
   CategoriesList,
@@ -14,12 +13,13 @@ import {
   MakerCustom,
   RowComponent,
   SpaceComponent,
-  TextComponent,
 } from '../../components';
 import {appColors} from '../../constants/appColors';
 import {appInfo} from '../../constants/appInfos';
 import {EventModel} from '../../models/EventModel';
 import {globalStyles} from '../../styles/globalStyles';
+import {useIsFocused} from '@react-navigation/native';
+import {LoadingModal} from '../../modals';
 
 const MapScreen = ({navigation}: any) => {
   const [currentLocation, setCurrentLocation] = useState<{
@@ -27,10 +27,14 @@ const MapScreen = ({navigation}: any) => {
     long: number;
   }>();
   const [events, setEvents] = useState<EventModel[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const isFocused = useIsFocused();
+
+  //eventhub://app/detail/12345
 
   useEffect(() => {
     GeoLocation.getCurrentPosition(
-      position => {
+      (position: any) => {
         if (position.coords) {
           setCurrentLocation({
             lat: position.coords.latitude,
@@ -38,7 +42,7 @@ const MapScreen = ({navigation}: any) => {
           });
         }
       },
-      error => {
+      (error: any) => {
         console.log(error);
       },
       {},
@@ -46,20 +50,23 @@ const MapScreen = ({navigation}: any) => {
   }, []);
 
   useEffect(() => {
-    currentLocation && getNearbyEvents();
-  }, [currentLocation]);
+    currentLocation && isFocused && getNearbyEvents();
+  }, [currentLocation, isFocused]);
 
-  const getNearbyEvents = async () => {
+  const getNearbyEvents = async (categoryId?: string) => {
+    setIsLoading(true);
     const api = `/get-events?lat=${currentLocation?.lat}&long=${
       currentLocation?.long
-    }&distance=${5}`;
+    }&distance=${5}${categoryId ? `&categoryId=${categoryId}` : ''}`;
 
     try {
       const res = await eventAPI.HandleEvent(api);
 
       setEvents(res.data);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
 
@@ -94,12 +101,14 @@ const MapScreen = ({navigation}: any) => {
                 key={`event${index}`}
                 title={event.title}
                 description=""
-                onPress={() => console.log('fafa')}
+                onPress={() =>
+                  navigation.navigate('EventDetail', {id: event._id})
+                }
                 coordinate={{
                   longitude: event.position.long,
                   latitude: event.position.lat,
                 }}>
-                <MakerCustom type={event.category} />
+                <MakerCustom categoryId={event.categories} />
               </Marker>
             ))}
         </MapView>
@@ -118,7 +127,7 @@ const MapScreen = ({navigation}: any) => {
           paddingTop: 48,
         }}>
         <RowComponent>
-          <View style={{flex: 1}}>
+          <RowComponent styles={{flex: 1}}>
             <InputComponent
               styles={{marginBottom: 0}}
               affix={
@@ -135,7 +144,7 @@ const MapScreen = ({navigation}: any) => {
               value=""
               onChange={val => console.log(val)}
             />
-          </View>
+          </RowComponent>
           <SpaceComponent width={12} />
           <CardComponent
             onPress={getNearbyEvents}
@@ -149,7 +158,7 @@ const MapScreen = ({navigation}: any) => {
           </CardComponent>
         </RowComponent>
         <SpaceComponent height={20} />
-        <CategoriesList />
+        <CategoriesList onFilter={catId => getNearbyEvents(catId)} />
       </View>
       <View
         style={{
@@ -166,6 +175,8 @@ const MapScreen = ({navigation}: any) => {
           showsHorizontalScrollIndicator={false}
         />
       </View>
+
+      <LoadingModal visible={isLoading} />
     </View>
   );
 };
