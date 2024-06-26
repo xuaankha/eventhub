@@ -31,7 +31,7 @@ const ChoiceLocation = (props: Props) => {
         <SpaceComponent width={12} />
 
         <TextComponent
-          numberOfLine={1}
+          numOfLine={1}
           text={addressSelected ? addressSelected.address : 'Choice'}
           flex={1}
         />
@@ -42,8 +42,8 @@ const ChoiceLocation = (props: Props) => {
         visible={isVibleModalLocation}
         onClose={() => setIsVibleModalLocation(false)}
         onSelect={val => {
-           setAddressSelected(val);
-           onSelect(val);
+          setAddressSelected(val);
+          onSelect(val);
         }}
       />
     </>
