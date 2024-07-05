@@ -26,7 +26,7 @@ export class HandleNotification {
 
   static getFcmToken = async () => {
     const fcmtoken = await AsyncStorage.getItem('fcmtoken');
-
+    console.log(fcmtoken);
     if (!fcmtoken) {
       const token = await messaging().getToken();
 
@@ -51,7 +51,7 @@ export class HandleNotification {
 
         await this.Update(auth.id, fcmTokens);
       }
-    } 
+    }
   };
 
   static Update = async (id: string, fcmTokens: string[]) => {
