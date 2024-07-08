@@ -204,7 +204,7 @@ const HomeScreen = ({navigation}: any) => {
       console.log(error);
     }
   };
-
+  
   return (
     <View style={[globalStyles.container]}>
       <StatusBar barStyle={'light-content'} />
@@ -244,7 +244,6 @@ const HomeScreen = ({navigation}: any) => {
                 />
               )}
             </View>
-
             <CircleComponent
               onPress={() => navigation.navigate('NotificationsScreen')}
               color="#524CE0"

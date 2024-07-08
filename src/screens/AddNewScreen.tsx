@@ -68,7 +68,7 @@ const AddNewScreen = ({navigation}: any) => {
 
     setErrorsMess(mess);
   }, [eventData]);
-
+ 
   const getCategories = async () => {
     const api = `/get-categories`;
 
